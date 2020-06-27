@@ -1,8 +1,9 @@
 const express = require('express');
-const app = express();
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
 require('./config/config');
+
+const app = express();
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -10,34 +11,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
+//Importa la rutas del usuario
+app.use(require('./routes/usuario.js'));
 
-app.get('/usuario', function(req, res) {
-    res.json('get Usuario');
-})
-app.put('/usuario/:id', function(req, res) {
-    let parametro = req.params.id;
-    res.json({
-        id: parametro
-    });
-})
-app.post('/usuario', function(req, res) {
-    let body = req.body;
-    if (body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            message: 'El nombre es necesario'
-        });
-    } else {
+mongoose.set('useCreateIndex', true);
 
-        res.json({
-            persona: body
-        });
-    }
-})
-app.delete('/usuario', function(req, res) {
-    res.json('delete Usuario');
-})
 
+mongoose.connect(process.env.URLDB, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false
+    })
+    .catch((err) => console.log(err));
+
+mongoose.connection.on('open', _ => {
+    console.log('Base de datos ONLINE');
+});
 app.listen(process.env.PORT, () => {
     console.log(`Escuchando el puerto `, process.env.PORT);
-})
+});
