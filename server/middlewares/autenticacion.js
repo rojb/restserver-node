@@ -25,7 +25,10 @@ let verificaToken = (req, res, next) => {
 let verificaAdmin_Role = (req, res, next) => {
     let usuario = req.usuario;
 
-    if (!usuario.role === 'ADMIN_ROLE') {
+    if (usuario.role === 'ADMIN_ROLE') {
+
+        next();
+    } else {
         return res.status(401).json({
             ok: false,
             err: {
@@ -33,7 +36,6 @@ let verificaAdmin_Role = (req, res, next) => {
             }
         });
     }
-    next();
 }
 
 module.exports = {
