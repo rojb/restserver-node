@@ -11,8 +11,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-//Importa la rutas del usuario
-app.use(require('./routes/usuario.js'));
+//Importa la rutas de nuestra aplicación
+app.use(require('./routes/index'));
 
 mongoose.set('useCreateIndex', true);
 
